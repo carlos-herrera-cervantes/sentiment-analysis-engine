@@ -7,6 +7,8 @@ namespace SentimentAnalysisEngine.Domain.Models
 {
     public class Consumer : TableEntity
     {
+        #region snippet_Properties
+
         public Guid Id { get; set; } = Guid.NewGuid();
 
         [JsonProperty("name")]
@@ -16,6 +18,15 @@ namespace SentimentAnalysisEngine.Domain.Models
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+        #endregion
+
+        #region snippet_Deconstructors
+
+        public void Deconstruct(out string partitionKey, out string rowKey)
+            => (partitionKey, rowKey) = (PartitionKey, RowKey);
+
+        #endregion
     }
 
     public class SingleConsumerDto
