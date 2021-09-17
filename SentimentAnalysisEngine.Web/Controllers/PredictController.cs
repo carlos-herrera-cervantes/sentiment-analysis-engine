@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.ML;
 using SentimentAnalysisEngine.Domain.Models;
 using SentimentAnalysisEngine.Web.Attributes;
