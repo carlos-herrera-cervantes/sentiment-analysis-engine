@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using SentimentAnalysisEngine.Web.Models;
 using AutoMapper;
 using System;
+using Microsoft.Azure.Cosmos.Table;
+using System.Collections.Generic;
 
 namespace SentimentAnalysisEngine.Web.Controllers
 {
@@ -42,7 +44,7 @@ namespace SentimentAnalysisEngine.Web.Controllers
 
         #region snippet_Get
 
-        [HttpGet]
+        [HttpGet("one")]
         public async Task<IActionResult> GetOneAsync([FromQuery] PointQueryDto query)
         {
             var cloudTable = await _azureTableClient
@@ -56,6 +58,22 @@ namespace SentimentAnalysisEngine.Web.Controllers
             return Ok(new SuccessResponse<SingleConsumerDto>
             {
                 Data = _mapper.Map<SingleConsumerDto>(finded)
+            });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllAsync([FromQuery] TableContinuationToken token)
+        {
+            var cloudTable = await _azureTableClient
+                .CreateIfNotExists($"{typeof(Consumer).Name}s");
+
+            var entities = await cloudTable
+                .ExecuteQuerySegmentedAsync(new TableQuery<Consumer>(), token);
+
+            return Ok(new SuccessListResponse<List<SingleConsumerDto>>
+            {
+                Data = _mapper.Map<List<SingleConsumerDto>>(entities.Results),
+                ContinuationToken = entities.ContinuationToken
             });
         }
 

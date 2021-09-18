@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Azure.Cosmos.Table;
+using Newtonsoft.Json;
 
 namespace SentimentAnalysisEngine.Domain.Models
 {
@@ -21,5 +22,14 @@ namespace SentimentAnalysisEngine.Domain.Models
     {
         [JsonProperty("data")]
         public T Data { get; set; }
+    }
+
+    public class SuccessListResponse<T> : BaseResponse where T : class
+    {
+        [JsonProperty("data")]
+        public T Data { get; set; }
+
+        [JsonProperty("continuationToken")]
+        public TableContinuationToken ContinuationToken { get; set; }
     }
 }
