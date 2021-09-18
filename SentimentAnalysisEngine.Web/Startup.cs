@@ -6,6 +6,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
 using SentimentAnalysisEngine.Domain.Models;
 using SentimentAnalysisEngine.Repository.Extensions;
+using SentimentAnalysisEngine.Repository.Repositories;
 
 namespace SentimentAnalysisEngine.Web
 {
@@ -18,6 +19,7 @@ namespace SentimentAnalysisEngine.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddTransient<IApiKey, ApiKey>();
             services.AddAutoMapperConfiguration();
             services.AddAzureTableStorage(options =>
             {

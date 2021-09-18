@@ -5,12 +5,21 @@ namespace SentimentAnalysisEngine.Web.Models
 {
     public class PointQueryDto
     {
-        [FromQuery(Name = "partitionKey")]
+        #region snippet_Properties
+
         [Required]
         public string PartitionKey { get; set; }
 
-        [FromQuery(Name = "rowKey")]
         [Required]
         public string RowKey { get; set; }
+
+        #endregion
+
+        #region snippet_Deconstructors
+
+        public void Deconstruct(out string partitionKey, out string rowKey)
+            => (partitionKey, rowKey) = (PartitionKey, RowKey);
+
+        #endregion
     }
 }
