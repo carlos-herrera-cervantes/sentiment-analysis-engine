@@ -2,21 +2,18 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SentimentAnalysisEngine.Domain\SentimentAnalysisEngine.Domain.csproj" />
-    <ProjectReference Include="..\SentimentAnalysisEngine.Repository\SentimentAnalysisEngine.Repository.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="10.1.1" />
     <PackageReference Include="Microsoft.Extensions.ML" Version="1.6.0" />
+    <PackageReference Include="Microsoft.ML.FastTree" Version="1.6.0" />
   </ItemGroup>
 
   <ItemGroup>
     <None Remove="Controllers\" />
-    <None Remove="Attributes\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Controllers\" />
-    <Folder Include="Attributes\" />
   </ItemGroup>
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
