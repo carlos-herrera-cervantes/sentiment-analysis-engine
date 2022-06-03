@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ML;
 using SentimentAnalysisEngine.Domain.Models;
-using SentimentAnalysisEngine.Web.Attributes;
 
 namespace SentimentAnalysisEngine.Web.Controllers
 {
@@ -11,26 +11,47 @@ namespace SentimentAnalysisEngine.Web.Controllers
     [ApiController]
     public class PredictController : ControllerBase
     {
-        private readonly PredictionEnginePool<SentimentData, SentimentPrediction> _precitionEnginePool;
+        #region snippet_Properties
 
-        public PredictController(PredictionEnginePool<SentimentData, SentimentPrediction> predictionEnginePool)
-            => _precitionEnginePool = predictionEnginePool;
+        private readonly PredictionEnginePool<SentimentData, SentimentPrediction> _predictionEnginePool;
+
+        private readonly ILogger _logger;
+
+        #endregion
+
+        #region snippet_Constructors
+
+        public PredictController
+        (
+            PredictionEnginePool<SentimentData, SentimentPrediction> predictionEnginePool,
+            ILogger<PredictController> logger
+        )
+            => (_predictionEnginePool, _logger) = (predictionEnginePool, logger);
+
+        #endregion
+
+        #region snippet_ActionMethods
 
         [HttpPost]
-        [AuthorizeApiKey]
         public IActionResult Predict([FromBody] SentimentData input)
         {
-            var prediction = _precitionEnginePool.Predict(modelName: "SentimentAnalysisModel", example: input);
-            var sentiment = prediction?.Prediction;
+            var prediction = _predictionEnginePool
+                .Predict(modelName: "SentimentAnalysisModel", example: input);
+            var sentiment = prediction?.PredictedLabel;
+
+            _logger.LogInformation($"PREDICTION FOR: {input.Col0}");
+            _logger.LogInformation($"RESULT IN: {sentiment == 1}");
 
             return Ok(new SuccessResponse<SentimentPrecitionResponse>
             {
                 Data = new SentimentPrecitionResponse
                 {
-                    Sentiment = sentiment == "1",
-                    SentimentText = sentiment == "1" ? "Positive" : "Negative",
+                    Sentiment = sentiment == 1,
+                    SentimentText = sentiment == 1 ? "Positive" : "Negative",
                 }
             });
         }
+
+        #endregion
     }
 }

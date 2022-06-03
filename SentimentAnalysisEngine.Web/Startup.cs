@@ -1,3 +1,4 @@
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -5,8 +6,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.ML;
 using SentimentAnalysisEngine.Domain.Models;
-using SentimentAnalysisEngine.Repository.Extensions;
-using SentimentAnalysisEngine.Repository.Repositories;
 
 namespace SentimentAnalysisEngine.Web
 {
@@ -19,20 +18,12 @@ namespace SentimentAnalysisEngine.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddTransient<IApiKey, ApiKey>();
-            services.AddAutoMapperConfiguration();
-            services.AddAzureTableStorage(options =>
-            {
-                options.AzureStorageConnectionString = Configuration
-                    .GetSection("ConnectionStrings")
-                    .GetSection("TableStorage").Value;
-            });
             services.AddPredictionEnginePool<SentimentData, SentimentPrediction>()
-                .FromFile
+                .FromUri
                 (
                     modelName: "SentimentAnalysisModel",
-                    filePath: "MLModels/MLModel.zip",
-                    watchForChanges: true
+                    uri: Configuration["ML:ModelUri"],
+                    period: TimeSpan.FromMinutes(5)
                 );
         }
 

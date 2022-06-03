@@ -1,14 +1,23 @@
-﻿using System;
-using Microsoft.ML.Data;
+﻿using Microsoft.ML.Data;
 using Newtonsoft.Json;
 
 namespace SentimentAnalysisEngine.Domain.Models
 {
     public class SentimentPrediction
     {
-        [ColumnName("PredictedLabel")]
-        public String Prediction { get; set; }
+        [ColumnName(@"col0")]
+        public float[] Col0 { get; set; }
 
+        [ColumnName(@"col1")]
+        public uint Col1 { get; set; }
+
+        [ColumnName(@"Features")]
+        public float[] Features { get; set; }
+
+        [ColumnName(@"PredictedLabel")]
+        public float PredictedLabel { get; set; }
+
+        [ColumnName(@"Score")]
         public float[] Score { get; set; }
     }
 
